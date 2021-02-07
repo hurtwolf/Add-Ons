@@ -66,7 +66,7 @@ class FFZAP extends Addon {
 				sort: -10,
 				path: 'Add-Ons > FFZ:AP Core >> Highlight Sounds',
 				title: 'Enable Highlight Sound',
-				description: 'Enable to hear a sound every time you\'re mentioned.',
+				description: 'Enable to hear a sound every time a message is highlighted.',
 				component: 'setting-check-box',
 			},
 		});
@@ -78,6 +78,17 @@ class FFZAP extends Addon {
 				path: 'Add-Ons > FFZ:AP Core >> Highlight Sounds',
 				title: 'Prevent in own Channel',
 				description: 'Enable to prevent the sound from playing in your own channel.',
+				component: 'setting-check-box',
+			},
+		});
+
+		this.settings.add('ffzap.core.highlight_sound_prevent_new_user_highlight', {
+			default: true,
+
+			ui: {
+				path: 'Add-Ons > FFZ:AP Core >> Highlight Sounds',
+				title: 'Prevent for "New Account Highlighter"',
+				description: 'Enable to prevent the sound from playing when a new user is highlighted by the "New Account Highlighter" add-on.',
 				component: 'setting-check-box',
 			},
 		});
@@ -249,6 +260,11 @@ class FFZAP extends Addon {
 		this.handleMessageDeletion(msg);
 
 		if (this.chat.context.get('ffzap.core.enable_highlight_sound') && msg.message.mentioned) {
+			// Prevent sound from playing when the "Prevet for 'New Account Highlighter'" setting is enabled
+			if (this.chat.context.get('ffzap.core.highlight_sound_prevent_new_user_highlight') && msg.message.new_user_highlight) {
+				return;
+			}
+
 			if (this.chat.context.get('ffzap.core.highlight_sound_prevent_own_channel')) {
 				const user = this.resolve('site').getUser();
 				if (user && msg.channel == user.login) {
