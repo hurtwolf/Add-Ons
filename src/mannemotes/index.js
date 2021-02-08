@@ -1,4 +1,3 @@
-import Socket from './socket';
 
 const GIF_EMOTES_MODE = {
 	DISABLED: 0,
