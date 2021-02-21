@@ -1,0 +1,1 @@
+export const GIF_EMOTES_MODE = { DISABLED: 0, ANIMATED: 1 }

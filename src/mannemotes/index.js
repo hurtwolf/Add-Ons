@@ -1,8 +1,4 @@
-
-const GIF_EMOTES_MODE = {
-	DISABLED: 0,
-	ANIMATED: 1,
-};
+import * as Constants from './constants.js'
 
 class MannEmotes extends Addon {
   constructor(...args){
@@ -20,7 +16,7 @@ class MannEmotes extends Addon {
 			ui: {
 				path: 'Add-Ons > MannEmotes >> Emotes',
 				title: 'GIF Emotes',
-				description: 'Change the mode of how GIF emotes are showing up.',
+				description: 'Enables the use of gif emotes.',
 				component: 'setting-select-box',
 				data: [
 					{ value: 0, title: 'Disabled' },
@@ -30,33 +26,13 @@ class MannEmotes extends Addon {
 		});
 
     this.chat.context.on('changed:mannemotes.gif_emotes_mode', this.updateEmotes, this);
-
-		this.socket = false;
 		this._last_emote_id = 0;
   }
 
-  // ADDON ENABLED
 	onEnable() {
-		this.log.debug('MannEmotes was enabled successfully.');
+		this.log.debug('MannEmotes 1.0.0 was enabled successfully.');
 		this.updateEmotes();
     this.initDeveloper();
-
-    this.socket = new Socket(this);
-
-    this.on('chat:room-add', this.roomAdd);
-		this.on('chat:room-remove', this.roomRemove);
-
-		for (const room of this.chat.iterateRooms()) {
-			if (room) this.roomAdd(room);
-		}
-	}
-
-  roomAdd(room) {
-		this.socket.joinRoom(room.id);
-	}
-
-	roomRemove(room) {
-		this.socket.leaveRoom(room.id);
 	}
 
   updateGlobalEmotes(data) {
@@ -101,7 +77,7 @@ class MannEmotes extends Addon {
 
     if (gifs) {
 			const gifMode = this.chat.context.get('mannemotes.gif_emotes_mode');
-			if (gifMode !== GIF_EMOTES_MODE.DISABLED) { // eslint-disable-line
+			if (gifMode !== Constants.GIF_EMOTES_MODE.DISABLED) { // eslint-disable-line
 				for (const emoteName of gifs) {
 					const emote = {
 						id: ++this._last_emote_id,
